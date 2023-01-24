@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="img1.png">
+    <title>Analog Clock</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* background-color: rgb(29, 105, 192); */
+            background-image: url('space.jpg');
+            background-attachment: fixed;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        .box {
+            position: relative;
+            z-index: 1;
+            width: 400px;
+            height: 400px;
+            backdrop-filter: blur(1px);
+            background: linear-gradient(310deg, rgba(144, 141, 141, 0.311) 80px, rgba(0, 0, 0, 0.653) 60%), rgba(95, 88, 88, 0.311) 80px;
+            border-radius: 50%;
+            /* border: 1px solid gray; */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            top: 7rem;
+            /* box-shadow: inset 2px 2px 6px 2px rgb(247, 200, 71), */
+            /* inset -2px -2px 4px 2px rgb(189, 217, 89); */
+        }
+
+        .clock {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgb(3, 7, 49);
+            background-size: cover;
+            border-radius: 50%;
+            /* backdrop-filter: blur(30px); */
+            /* border: 1px solid wheat; */
+            /* z-index: -1; */
+            box-shadow: inset 5px 5px 40px 10px rgb(0, 0, 0),
+                inset -1px -1px 40px 10px rgb(0, 0, 0);
+        }
+
+        .clock::before {
+            content: '';
+            position: absolute;
+            height: 15px;
+            width: 15px;
+            background: navajowhite;
+            border-radius: 50%;
+            z-index: 10000;
+            box-shadow: inset 1px 1px 3.5px 4px rgb(61, 69, 68),
+                inset 1px 1px 3.5px 4px white;
+        }
+
+        .hour,
+        .min,
+        .sec {
+            position: absolute;
+        }
+
+        .hour,
+        .hr {
+            width: 160px;
+            height: 160px;
+            /* border: 2px solid red; */
+            /* border-radius: 50%; */
+
+        }
+
+        .min,
+        .mn {
+            width: 190px;
+            height: 190px;
+            /* border: 2px solid red; */
+            /* border-radius: 50%; */
+
+        }
+
+        .sec,
+        .sc {
+            width: 230px;
+            height: 230px;
+            /* border: 2px solid red; */
+            /* border-radius: 50%; */
+
+        }
+
+        .hr,
+        .mn,
+        .sc {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .hr::before {
+            content: '';
+            position: absolute;
+            width: 6px;
+            height: 100px;
+            background: black;
+            z-index: 11;
+            border-top-left-radius: 35%;
+            border-top-right-radius: 35%;
+
+        }
+
+        .mn::before {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 120px;
+            background: black;
+            z-index: 12;
+            border-top-left-radius: 40%;
+            border-top-right-radius: 40%;
+
+        }
+
+        .sc::before {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 150px;
+            background: red;
+            z-index: 13;
+            border-top-left-radius: 50%;
+            border-top-right-radius: 50%;
+        }
+
+        img {
+            height: 17rem;
+            width: 17rem;
+            border-radius: 50%;
+        }
+
+        .box1 {
+            /* background: rgb(15, 11, 50); */
+            height: 16rem;
+            width: 16rem;
+            border-radius: 50%;
+            background: linear-gradient(lime 10%, white 70%, orange 20%);
+            animation: bgrotate 2s linear infinite;
+        }
+
+        .box1::after {
+            content: '';
+            position: absolute;
+            inset: 5px;
+            background: rgb(3, 7, 49);
+            border-radius: 50%;
+            box-shadow: inset 0px 0px 40px 8px rgba(0, 0, 0, 0.751),
+                inset 0px 0px 40px 8px rgba(0, 0, 0, 0.731);
+        }
+
+        @keyframes bgrotate {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="box">
+            <div class="clock">
+                <!-- <img src="analog" alt="clock"> -->
+                <div class="box1"></div>
+                <div class="hour"><span id="hr" class="hr"></span></div>
+                <div class="min"><span id="mn" class="mn"></span></div>
+                <div class="sec"><span id="sc" class="sc"></span></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        /* calculation
+        **hour hand calculation**
+        12h = 360deg
+        1h = 30deg    
+
+        60m = 30deg   (1hr = 60m)
+        m   = m/2      when hour hand move, then minute hand also move so m/2 will add
+
+        The final formula for hour hand
+        h = 30 * h + m/2
+
+        **minute hand calculation**
+        60m = 360deg
+        m = 6m
+
+        **second hand calculation**
+        60s = 360deg
+        s = 6s
+        */
+
+
+        setInterval(() => {
+
+            let hr = document.getElementById('hr')
+            let mnt = document.getElementById('mn')
+            let sec = document.getElementById('sc')
+
+            let time = new Date()
+            let h = time.getHours()
+            let m = time.getMinutes()
+            let s = time.getSeconds()
+
+            let hrotation = 30 * h + m / 2;
+            let mrotation = 6 * m;
+            let srotation = 6 * s;
+            hr.style.transform = `rotate(${hrotation}deg)`
+            mnt.style.transform = `rotate(${mrotation}deg)`
+            sec.style.transform = `rotate(${srotation}deg)`
+
+        }, 1000);
+
+    </script>
+
+</body>
+
+</html>
